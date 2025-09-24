@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pokédex - Joaho Fiallos</title>
+  <style>
+    *{
+        box-sizing:border-box;
+        margin:0;
+        padding:0;
+    }
+    body{
+      font-family:'Poppins',sans-serif;
+      background: linear-gradient(135deg,#ffecd2 0%,#fcb69f 100%);
+      color:#1e293b;
+      padding:20px;
+    }
+    
+    header{
+      max-width:1200px;margin:0 auto 20px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:16px;
+      align-items:center;
+      justify-content:space-between;
+      background:#fff; 
+      padding:16px 24px; 
+      border-radius:20px;
+      box-shadow:0 8px 20px rgba(0,0,0,0.15);
+    }
+    .brand{
+        display:flex;
+        gap:14px;
+        align-items:center;
+    }
+
+    h1{
+        font-size:26px;color:#d32f2f;
+    }
+    p.lead{
+        font-size:14px;color:#64748b;
+    }
+
+
+    .controls{
+        display:flex;
+        gap:12px;
+        align-items:center;
+        flex-wrap:wrap;
+    }
+    input[type="search"]{
+      padding:10px 14px;
+      border-radius:12px;
+      border:2px solid #ef5350;
+      width:240px;
+      outline:none;
+      background:#fff;
+      box-shadow:inset 0 2px 6px rgba(0,0,0,0.1);
+      transition:0.3s;
+    }
+    input[type="search"]:focus{
+        border-color:#b71c1c;
+        box-shadow:0 0 8px rgba(239,83,80,0.5);
+    }
+    button{
+        padding:10px 16px;
+        border-radius:12px;
+        border:0;
+        cursor:pointer;
+        background:linear-gradient(135deg,#ef5350,#d32f2f);
+        color:#fff;
+        font-weight:600;
+        transition:0.2s;
+        box-shadow:0 4px 12px rgba(0,0,0,0.2);
+    }
+    button:hover{
+        transform:scale(1.07);
+    }
+    button.secondary{
+        background:#fff;
+        color:#d32f2f;
+        border:2px solid #d32f2f;
+        box-shadow:none;
+    }
+    button.secondary:hover{
+        background:#ffe5e5;
+    }
+
+    main{
+        max-width:1200px;
+        margin:0 auto;
+    }
+    .grid{
+        display:grid;
+        grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+        gap:20px;
+    }
+
+    .card{
+      background:linear-gradient(180deg,#ffffff 0%,#f9fafb 100%);
+      border-radius:20px;
+      padding:16px;
+      text-align:center;
+      box-shadow:0 6px 16px rgba(0,0,0,0.12);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      align-items:center;
+      transition: transform 0.25s, box-shadow 0.25s;
+      position:relative;
+      overflow:hidden;
+    }
+    .card:hover{
+        transform:translateY(-6px) scale(1.02);
+        box-shadow:0 10px 24px rgba(0,0,0,0.2);
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      top:-50%;
+      left:-50%;
+      width:200%;
+      height:200%;
+      background:radial-gradient(circle,#ef5350 10%,transparent 70%);
+      opacity:0;
+      transition:0.4s;
+      z-index:0;
+    }
+    .card:hover::before{
+        opacity:0.15;
+    }
+    .card img{
+        width:130px;
+        height:130px;
+        object-fit:contain;
+        cursor:pointer;
+        z-index:1;
+    }
+    .name{
+        font-weight:700;
+        text-transform:capitalize;
+        font-size:18px;
+        z-index:1;
+    }
+    .meta{
+        font-size:13px;
+        color:#6b7280;
+        z-index:1;
+    }
+
+    .pagination{
+        display:flex;
+        gap:8px;
+        justify-content:center;
+        padding:20px 0;
+        flex-wrap:wrap;
+    }
+    .page-btn{
+        min-width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid #ef5350;
+        background: #fff;
+        color: #d32f2f;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 700;
+        transition: all 0.25s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+
+    .page-btn:hover{
+        background: #ef5350;
+        color: #fff;
+        transform: scale(1.1);
+    }
+
+    .page-btn.active{
+        background: linear-gradient(135deg,#ef5350,#d32f2f);
+        color: #fff;
+        border-color: #ef5350;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
+.dots{
+    min-width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: transparent;
+    color: #6b7280;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+    .center{
+        display:flex;
+        justify-content:center;
+        margin-bottom:10px;
+    }
+    .small{
+        font-size:14px;
+        color:#334155;
+        background:#fff;
+        padding:6px 12px;
+        border-radius:8px;
+        box-shadow:0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    @media(max-width:600px){
+      header{
+        flex-direction:column;
+        align-items:flex-start}
+        .controls{
+        width:100%
+      }
+      input[type="search"]{flex:1}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div>
+        <h1>Pokédex</h1>
+      </div>
+    </div>
+    <div class="controls">
+      <input id="searchInput" type="search" placeholder="Busca un Pokémon..." />
+      <button id="resetBtn" class="secondary">Borrar</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="center"><span class="small" id="status">Cargando...</span></div>
+    <section id="list" class="grid" aria-live="polite"></section>
+    <nav class="pagination" id="pagination"></nav>
+  </main>
+
+  <script>
+    const LIMIT = 20;
+    let offset=0,totalCount=0,allPokemon=[],filteredPokemon=[];
+
+    const listEl=document.getElementById('list');
+    const statusEl=document.getElementById('status');
+    const paginationEl=document.getElementById('pagination');
+    const searchInput=document.getElementById('searchInput');
+    const resetBtn=document.getElementById('resetBtn');
+
+    async function fetchAllPokemon(){
+      statusEl.textContent='Cargando...';
+      const res=await fetch(`https://pokeapi.co/api/v2/pokemon?limit=10000&offset=0`);
+      const data=await res.json();
+      allPokemon=data.results.map((p,i)=>({...p,id:i+1}));
+      filteredPokemon=allPokemon;
+      totalCount=filteredPokemon.length;
+      renderPage();
+    }
+
+    async function renderPage(){
+      listEl.innerHTML='';
+      const pageData=filteredPokemon.slice(offset,offset+LIMIT);
+
+      if(pageData.length===0){
+        statusEl.textContent='No se encontraron resultados';
+        paginationEl.innerHTML='';
+        return;}
+
+      for(const p of pageData){
+        const d=await fetch(p.url).then(x=>x.json());
+        const img=d.sprites.other['official-artwork'].front_default||d.sprites.front_default;
+
+        const card=document.createElement('article');
+        card.className='card';
+        const imgEl=document.createElement('img');
+        imgEl.alt=p.name;
+        imgEl.src=img;
+        imgEl.addEventListener('click',()=>window.open(img,'_blank'));
+        const nameEl=document.createElement('div');
+        nameEl.className='name';
+        nameEl.textContent=p.name;
+        const meta=document.createElement('div');
+        meta.className='meta';
+        meta.textContent=`#${p.id}`;
+        card.append(imgEl,nameEl,meta);
+        listEl.appendChild(card);
+      }
+
+      statusEl.textContent=`Mostrando ${offset+1}-${Math.min(offset+LIMIT,totalCount)} de ${totalCount}`;
+      renderPagination();
+    }
+
+    function renderPagination(){
+      paginationEl.innerHTML='';
+      const pages=Math.ceil(totalCount/LIMIT);
+      const currentPage=Math.floor(offset/LIMIT)+1;
+      function addPageBtn(p){
+        const btn=document.createElement('button');
+        btn.className='page-btn';
+        btn.textContent=`${p}`;
+        if(p===currentPage)btn.classList.add('active');
+        btn.addEventListener('click',()=>{
+            offset=(p-1)*LIMIT;
+            renderPage();
+        });
+        paginationEl.appendChild(btn);
+      }
+      if(currentPage>1){
+        const prev=document.createElement('button');
+        prev.className='page-btn';
+        prev.textContent=`‹ ${currentPage-1}`;
+        prev.addEventListener('click',()=>{
+            offset=(currentPage-2)*LIMIT;
+            renderPage();
+        });
+        paginationEl.appendChild(prev);}
+      for(let p=1;p<=pages;p++){
+        if(p===1||p===pages||(p>=currentPage-2&&p<=currentPage+2))addPageBtn(p);
+        else if(p===2||p===pages-1){
+            const dots=document.createElement('span');
+            dots.textContent='...';
+            dots.className='dots';
+            paginationEl.appendChild(dots);
+        }
+      }
+      if(currentPage<pages){
+        const next=document.createElement('button');
+        next.className='page-btn';
+        next.textContent=`${currentPage+1} ›`;
+        next.addEventListener('click',()=>{
+            offset=(currentPage)*LIMIT;
+            renderPage();
+        });
+        paginationEl.appendChild(next);
+        }
+    }
+
+    searchInput.addEventListener('input',()=>{
+      const q=searchInput.value.toLowerCase().trim();
+      filteredPokemon=allPokemon.filter(p=>p.name.includes(q));
+      totalCount=filteredPokemon.length;
+      offset=0;
+      renderPage();
+    });
+
+    resetBtn.addEventListener('click',()=>{
+      searchInput.value='';
+      filteredPokemon=allPokemon;
+      totalCount=filteredPokemon.length;
+      offset=0;
+      renderPage();
+    });
+
+    fetchAllPokemon();
+  </script>
+</body>
+</html>
